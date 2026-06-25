@@ -2,19 +2,21 @@ trigger:
 - main
 
 pool:
-  vmImage: ubuntu-latest
+  vmImage: 'ubuntu-latest'
 
 steps:
 
 - task: AzureCLI@2
-  displayName: 'Terraform Deployment'
+  displayName: 'Terraform Deploy'
   inputs:
     azureSubscription: 'new'
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
-
       wget https://releases.hashicorp.com/terraform/1.9.8/terraform_1.9.8_linux_amd64.zip
+
+      sudo apt-get update
+      sudo apt-get install unzip -y
 
       unzip terraform_1.9.8_linux_amd64.zip
 
@@ -22,7 +24,7 @@ steps:
 
       terraform version
 
-      cd terraform
+      cd $(System.DefaultWorkingDirectory)/terraform
 
       terraform init
 
