@@ -13,12 +13,16 @@ steps:
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
+
+      echo "===== Azure Account ====="
+      az account show
+
       wget https://releases.hashicorp.com/terraform/1.9.8/terraform_1.9.8_linux_amd64.zip
 
       sudo apt-get update
       sudo apt-get install unzip -y
 
-      unzip terraform_1.9.8_linux_amd64.zip
+      unzip -o terraform_1.9.8_linux_amd64.zip
 
       sudo mv terraform /usr/local/bin/
 
@@ -26,10 +30,13 @@ steps:
 
       cd $(System.DefaultWorkingDirectory)/terraform
 
+      echo "===== Terraform Files ====="
+      ls -la
+
       terraform init
 
       terraform validate
 
-      terraform plan
+      terraform plan -out=tfplan
 
-      terraform apply -auto-approve
+      terraform show tfplan
