@@ -2,17 +2,15 @@ trigger:
 - main
 
 pool:
-  vmImage: 'ubuntu-latest'
+  vmImage: ubuntu-latest
 
 steps:
+- checkout: self
 
-# Install Terraform
 - task: TerraformInstaller@1
-  displayName: 'Install Terraform'
   inputs:
     terraformVersion: 'latest'
 
-# Azure Login + Terraform
 - task: AzureCLI@2
   displayName: 'Terraform Deploy'
   inputs:
@@ -20,16 +18,14 @@ steps:
     scriptType: 'bash'
     scriptLocation: 'inlineScript'
     inlineScript: |
-      az account show
-
-      cd $(System.DefaultWorkingDirectory)/terraform
-
       terraform version
 
+      cd "$(System.DefaultWorkingDirectory)/terraform RG"
+
+      pwd
+      ls -la
+
       terraform init
-
       terraform validate
-
-      terraform plan -out=tfplan
-
-      terraform apply -auto-approve tfplan
+      terraform plan
+      terraform apply -auto-approve
